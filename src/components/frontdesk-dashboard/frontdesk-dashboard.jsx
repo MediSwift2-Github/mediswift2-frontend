@@ -1,13 +1,23 @@
 import React from 'react';
-import './frontdesk-dashboard.css'; // Make sure the path matches your file structure
+import { Box, Typography, Toolbar } from '@mui/material';
+import { AppBarComponent } from "./AppBarComponent/app-bar"; // Adjust the import path as necessary
+import { DrawerComponent } from "./drawer-component/drawer"; // Adjust the import path as necessary
+import { PatientTable } from "./patient-queue-table/patient-table"; // Adjust the import path as necessary
 
 const FrontDeskDashboard = () => {
     return (
-        <div className="frontdesk-dashboard">
-            <h1>Front Desk Dashboard</h1>
-            <p>Welcome to the Front Desk Dashboard. Here, you can manage patient appointments, check-ins, and more.</p>
-            {/* Add more components and functionality as needed */}
-        </div>
+        <Box sx={{ display: 'flex' }}>
+            <AppBarComponent />
+            <DrawerComponent />
+            <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+                <Toolbar />
+                <Typography variant="h6" gutterBottom>
+                    Patient List
+                </Typography>
+                <PatientTable />
+                {/* The PatientDialog components are removed from here since they are now in DrawerComponent */}
+            </Box>
+        </Box>
     );
 };
 
