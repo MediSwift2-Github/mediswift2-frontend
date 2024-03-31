@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import axios from 'axios'; // Make sure to install axios if you haven't
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:3000');
+
 
 export const PatientTable = () => {
     // State to store the fetched data
@@ -24,6 +28,19 @@ export const PatientTable = () => {
         };
 
         fetchData();
+
+        // Setup WebSocket listener for queue updates
+        socket.on('queueUpdate', (update) => {
+            console.log('Queue update received:', update);
+            // Optionally, fetch the updated data or adjust the state based on the update
+            // For simplicity, we're just refetching the queue data here
+            fetchData();
+        });
+
+        // Cleanup on component unmount
+        return () => {
+            socket.off('queueUpdate');
+        };
     }, []); // Empty dependency array means this effect runs once on mount
 
     return (
