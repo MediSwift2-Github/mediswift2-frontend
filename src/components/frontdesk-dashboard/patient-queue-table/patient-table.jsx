@@ -17,9 +17,9 @@ export const PatientTable = () => {
                 const response = await axios.get('/api/queue');
                 // Mapping the data assuming 'patientId' is populated with the patient object and 'status' for patient status
                 const queueData = response.data.map((entry) => ({
-                    id: entry.patientId._id, // Assuming patientId is populated with the patient object
-                    name: entry.patientId.name,
-                    status: entry.status // Adjusted for clarity
+                    id: entry._id, // Use the queue entry's _id for key
+                    name: entry.patientName, // Use the patientName from the queue entry
+                    status: entry.status, // Status is unchanged
                 }));
                 setRows(queueData);
             } catch (error) {
