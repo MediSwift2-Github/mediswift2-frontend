@@ -8,12 +8,19 @@ import {
     TableHead,
     TableRow,
     Container,
-    Paper
+    Paper,
+    Button
 } from '@mui/material';
 import axios from 'axios'; // Make sure to install axios if you haven't
+import {useDispatch} from "react-redux";
+import {selectPatient} from "../../features/selectedPatient/patientSlice";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
 
 const DoctorDashboard = () => {
     const [queue, setQueue] = useState([]); // State to store the queue
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Function to fetch queue data
@@ -29,6 +36,15 @@ const DoctorDashboard = () => {
         fetchQueue(); // Call the function when the component mounts
     }, []); // Empty dependency array ensures this runs once on mount
 
+    const handleStartConsultation = (patient) => {
+        console.log('Starting consultation for:', patient); // Log the patient details
+
+        // Dispatch the selectPatient action with the patient as payload
+        dispatch(selectPatient(patient));
+        navigate('/consultation-dashboard');
+        // Additional logic for starting the consultation can be added here
+    };
+
     return (
         <Container>
             <Typography variant="h4" component="h1">
@@ -40,7 +56,6 @@ const DoctorDashboard = () => {
                         <TableRow>
                             <TableCell>Sr No.</TableCell>
                             <TableCell>Patient Name</TableCell>
-
                             <TableCell align="right">Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -52,9 +67,14 @@ const DoctorDashboard = () => {
                                 </TableCell>
                                 <TableCell>{entry.patientName}</TableCell>
 
-
                                 <TableCell align="right">
-                                    {/* Action buttons will go here */}
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => handleStartConsultation(entry)}
+                                    >
+                                        Start Consultation
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
