@@ -27,7 +27,10 @@ const DoctorDashboard = () => {
         const fetchQueue = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/queue');
-                setQueue(response.data); // Update state with fetched data
+                setQueue(response.data.map(patient => ({
+                    ...patient,
+                    statusText: patient.status === 'Completed' ? 'Completed' : 'Start Consultation'
+                })));
             } catch (error) {
                 console.error('Failed to fetch queue:', error);
             }
@@ -61,7 +64,10 @@ const DoctorDashboard = () => {
                     </TableHead>
                     <TableBody>
                         {queue.map((entry, index) => (
-                            <TableRow key={entry._id}>
+                            <TableRow key={entry._id}
+                                      style={{
+                                          backgroundColor: entry.status === 'Completed' ? '#e0e0e0' : 'inherit'
+                                      }}>
                                 <TableCell component="th" scope="row">
                                     {index + 1}
                                 </TableCell>
@@ -72,8 +78,9 @@ const DoctorDashboard = () => {
                                         variant="contained"
                                         color="primary"
                                         onClick={() => handleStartConsultation(entry)}
+                                        disabled={entry.status === 'Completed'}
                                     >
-                                        Start Consultation
+                                        {entry.statusText}
                                     </Button>
                                 </TableCell>
                             </TableRow>

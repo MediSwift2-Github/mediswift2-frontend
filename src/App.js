@@ -15,7 +15,8 @@ function App() {
                 <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
                 <Route path="/frontdesk-dashboard" element={<FrontDeskDashboard />} />
                 <Route path="/consultation-dashboard" element={<ConsultationDashboard />} />
-                <Route path="/documentation" component={DocumentationPage} />{/* Add this line */}
+                <Route path="/documentation" element={<DocumentationPage />} />
+                {/* Add this line */}
 
                 {/* Other routes */}
             </Routes>

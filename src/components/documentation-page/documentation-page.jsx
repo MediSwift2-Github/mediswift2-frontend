@@ -1,12 +1,245 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Typography, Paper, Tabs, Tab, Button, Box } from '@mui/material';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const DocumentationPage = () => {
+    const [value, setValue] = useState(0); // Tab selection state
+    const [healthRecordContent, setHealthRecordContent] = useState({ ops: [] }); // Editor content for Health Record
+    const [patientHandoutContent, setPatientHandoutContent] = useState(''); // Editor content for Patient Handout
+
+    const selectedPatient = useSelector(state => state.patient.selectedPatient);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const formatToJsonDelta = (data) => {
+        const ops = []; // Initialize Delta operations array
+
+        const addText = (text, attributes = {}) => {
+            ops.push({ insert: text, attributes });
+        };
+
+        const addObject = (obj, level = 0) => {
+            if (typeof obj === 'object' && !Array.isArray(obj)) {
+                Object.keys(obj).forEach(key => {
+                    const value = obj[key];
+                    if (value === null) return; // Skip null values
+
+                    if (typeof value === 'object' && !Array.isArray(value)) {
+                        addText(`${' '.repeat(level * 2)}${key}\n`, { bold: true }); // Add key with indentation
+                        addObject(value, level + 1); // Recurse into object
+                    } else if (Array.isArray(value)) {
+                        addText(`${' '.repeat(level * 2)}${key}:\n`, { bold: true });
+                        value.forEach(item => {
+                            if (typeof item === 'object') {
+                                addObject(item, level + 1); // Handle objects within arrays
+                            } else {
+                                addText(`${' '.repeat((level + 1) * 2)}- ${item}\n`); // Handle strings within arrays
+                            }
+                        });
+                    } else {
+                        addText(`${' '.repeat(level * 2)}${key}: ${value}\n`); // Handle simple key-value pairs
+                    }
+                });
+            } else if (Array.isArray(obj)) {
+                obj.forEach(item => {
+                    if (typeof item === 'object') {
+                        addObject(item, level); // Recurse without adding key
+                    } else {
+                        addText(`- ${item}\n`); // Handle plain string items in array
+                    }
+                });
+            }
+        };
+
+        addObject(data); // Initialize the recursive parsing
+        return { ops }; // Return the ops array formatted for Quill Delta
+    };
+
+
+    useEffect(() => {
+        if (selectedPatient) {
+            const getSummary = async () => {
+                const _id = selectedPatient.patientId;
+                const date = new Date().toISOString().split('T')[0]; // Gets the current date in YYYY-MM-DD format
+
+                try {
+                    const response = await fetch(`/getSummary?_id=${_id}&date=${date}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Received data:', data);  // Log the entire received data object
+                        console.log('Data types:', typeof data.ehrContent, typeof data.handoutContent);
+                        const deltaFormat = formatToJsonDelta(data.patient);
+                        setHealthRecordContent(formatToJsonDelta(data.ehrContent)); // Use the Delta format for the EHR editor
+                        setPatientHandoutContent(formatToJsonDelta(data.handoutContent)); // Use the Delta format for the Handout editor
+                    } else {
+                        // Handle non-2xx responses
+                        console.error('Failed to fetch summary:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching patient summary:', error);
+                }
+            };
+
+            getSummary();
+        }
+    }, [selectedPatient]); // This effect depends on `selectedPatient` and will re-run when it changes
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+    const saveHealthRecord = async () => {
+        console.log('Saving Health Record:', healthRecordContent); // Log current state
+
+        // Ensure there is a selected patient
+        if (!selectedPatient) {
+            alert('No patient selected!');
+            return;
+        }
+
+        const summaryDate = new Date().toISOString().split('T')[0];
+
+        // Prepare the payload with the patient ID and health record content
+        const payload = {
+            patientId: selectedPatient.patientId,
+            healthRecord: healthRecordContent,
+            summaryDate: summaryDate
+
+        };
+
+        try {
+            const response = await fetch('/api/saveHealthRecord', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload) // Send payload as JSON string
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Health Record saved successfully:', result);
+            } else {
+                // Handle non-2xx responses
+                console.error('Failed to save Health Record:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error saving Health Record:', error);
+        }
+
+        // Optionally switch to the Patient Handout tab
+        setValue(1);
+    };
+
+
+
+    const sendPatientHandout = async () => {
+        if (!selectedPatient) {
+            alert('No patient selected!');
+            return;
+        }
+
+        const summaryDate = new Date().toISOString().split('T')[0];
+
+        const payload = {
+            patientId: selectedPatient.patientId,
+            patientHandout: patientHandoutContent,
+            summaryDate: summaryDate
+        };
+
+        try {
+            const response = await fetch('/api/savePatientHandout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Patient Handout sent successfully:', result);
+
+                // Navigate to Doctor Dashboard after successful update
+                navigate('/doctor-dashboard');
+            } else {
+                console.error('Failed to send Patient Handout:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error sending Patient Handout:', error);
+        }
+    };
+
+
     return (
-        <div>
-            <h1>Documentation Page</h1>
-            <p>This is a p tag</p>
-            {/* Add your page content here */}
-        </div>
+        <Box sx={{ width: '100%', mt: 4, mb: 2 }}>
+            <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+                <Typography variant="h5" gutterBottom>
+                    Notes for {selectedPatient ? selectedPatient.patientName : "Select a Patient"}
+                </Typography>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    <Tab label="Health Record" />
+                    <Tab label="Patient Handout" />
+                </Tabs>
+            </Paper>
+
+            {value === 0 && (
+                <ReactQuill
+                    theme="snow"
+                    value={healthRecordContent}
+                    onChange={setHealthRecordContent}
+                    style={{ height: '400px', marginBottom: '50px' }}
+                />
+            )}
+
+            {value === 1 && (
+                <ReactQuill
+                    theme="snow"
+                    value={patientHandoutContent}
+                    onChange={setPatientHandoutContent}
+                    style={{ height: '400px', marginBottom: '50px' }}
+                />
+            )}
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                {value === 0 && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        onClick={saveHealthRecord}
+                    >
+                        Save Health Record
+                    </Button>
+                )}
+                {value === 1 && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        onClick={sendPatientHandout}
+                    >
+                        Send Handout
+                    </Button>
+                )}
+            </Box>
+        </Box>
     );
 };
 

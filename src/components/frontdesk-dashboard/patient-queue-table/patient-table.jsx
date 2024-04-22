@@ -63,16 +63,21 @@ export const PatientTable = () => {
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <TableRow
-              key={row.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
+              <TableRow
+                  key={row.id}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    backgroundColor: row.status === "Completed" ? "#e0e0e0" : "inherit", // Grey out if completed
+                  }}
+              >
               <TableCell component="th" scope="row">
                 {index + 1} {/* Here we use the index for the serial number */}
               </TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>
-                <Button variant="outlined">{row.status}</Button>
+                <Button variant="outlined" disabled={row.status === "Completed"}>
+                  {row.status}
+                </Button>
               </TableCell>
             </TableRow>
           ))}
