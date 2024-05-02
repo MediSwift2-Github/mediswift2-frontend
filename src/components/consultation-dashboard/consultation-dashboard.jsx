@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './consultation-dashboard.css'; // Assuming basic CSS setup for now
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+
 const ConsultationDashboard = () => {
     const [sessionSummary, setSessionSummary] = useState(null);
     const [recording, setRecording] = useState(false);
@@ -73,7 +76,7 @@ const ConsultationDashboard = () => {
                 // Add any other metadata you might need to send
 
                 // Use fetch to send the audio blob to your server
-                fetch('/api/audio/upload', {
+                fetch(`${API_URL}/api/audio/upload`, {
                     method: 'POST',
                     body: formData,
                 })
@@ -110,7 +113,7 @@ const ConsultationDashboard = () => {
 
     useEffect(() => {
         if (patientId) {
-            fetch(`/api/patients/${patientId}/summaries?date=${summaryDate}`)
+            fetch(`${API_URL}/api/patients/${patientId}/summaries?date=${summaryDate}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {

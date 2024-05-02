@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
 const DocumentationPage = () => {
     const [value, setValue] = useState(0); // Tab selection state
@@ -67,7 +68,7 @@ const DocumentationPage = () => {
                 const date = new Date().toISOString().split('T')[0]; // Gets the current date in YYYY-MM-DD format
 
                 try {
-                    const response = await fetch(`/getSummary?_id=${_id}&date=${date}`, {
+                    const response = await fetch(`${API_URL}/getSummary?_id=${_id}&date=${date}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -158,7 +159,7 @@ const DocumentationPage = () => {
         };
 
         try {
-            const response = await fetch('/api/savePatientHandout', {
+            const response = await fetch(`${API_URL}/api/savePatientHandout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

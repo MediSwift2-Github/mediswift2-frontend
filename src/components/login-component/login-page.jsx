@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './login-page.css';
 import logo from './MediSwift.png';
-
+import api from "../../api";
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -12,7 +12,7 @@ const LoginPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/api/login', { username, password }, { withCredentials: true });
+            const response = await api.post('/api/login', { username, password }, { withCredentials: true });
             if (response.data.message === 'Authentication successful') {
                 // Check the role and navigate accordingly
                 if (response.data.role === 'doctor') {

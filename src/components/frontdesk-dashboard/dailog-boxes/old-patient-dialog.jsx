@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, TextField, Button, DialogActions, List, ListItem, ListItemText } from "@mui/material";
 import axios from 'axios'; // Ensure you have axios installed
-
+import api from "../../../api";
 export const OldPatientDialog = ({ isOpen, onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [patients, setPatients] = useState([]); // Updated to hold fetched data
@@ -11,7 +11,7 @@ export const OldPatientDialog = ({ isOpen, onClose }) => {
         const fetchPatients = async () => {
             if(searchTerm.trim()) { // Only search if searchTerm is not empty
                 try {
-                    const response = await axios.get(`http://localhost:3000/api/searchpatient?name=${searchTerm}`);
+                    const response = await api.get(`/api/searchpatient?name=${searchTerm}`);
                     setPatients(response.data); // Update state with fetched data
                 } catch (error) {
                     console.error("Error fetching patients:", error);
@@ -32,7 +32,7 @@ export const OldPatientDialog = ({ isOpen, onClose }) => {
     const handleSelectPatient = async () => {
         if (selectedPatient && selectedPatient._id) {
             try {
-                const response = await axios.post('http://localhost:3000/api/queue/add', {
+                const response = await api.post('/api/queue/add', {
                     patientId: selectedPatient._id,
                 });
 

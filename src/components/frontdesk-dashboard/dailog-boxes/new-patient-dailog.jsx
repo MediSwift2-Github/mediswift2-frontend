@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, TextField, Button, DialogActions } from "@mui/material";
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
 export const NewPatientDialog = ({ isOpen, onClose }) => {
     const [name, setName] = useState('');
@@ -15,7 +16,7 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
             };
 
             // Make the POST request to the server to add a new patient
-            const response = await fetch('/api/newpatient', {
+            const response = await fetch(`${API_URL}/api/newpatient`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
                 const addedPatient = await response.json();
 
                 // Now, use the _id of the newly added patient to add them to the queue
-                const queueResponse = await fetch('/api/queue/add', {
+                const queueResponse = await fetch(`${API_URL}/api/queue/add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

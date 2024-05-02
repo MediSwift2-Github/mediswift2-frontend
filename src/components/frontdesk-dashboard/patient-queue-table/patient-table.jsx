@@ -11,8 +11,10 @@ import {
 } from "@mui/material";
 import axios from "axios"; // Make sure to install axios if you haven't
 import io from "socket.io-client";
+import api from "../../../api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect(API_URL);
 
 export const PatientTable = () => {
   // State to store the fetched data
@@ -22,7 +24,7 @@ export const PatientTable = () => {
     // Function to fetch data from the endpoint
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/queue");
+        const response = await api.get("/api/queue");
         // Mapping the data assuming 'patientId' is populated with the patient object and 'status' for patient status
         const queueData = response.data.map((entry) => ({
           id: entry._id, // Use the queue entry's _id for key

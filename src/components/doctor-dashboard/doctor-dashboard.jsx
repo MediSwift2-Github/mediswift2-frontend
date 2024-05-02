@@ -15,6 +15,8 @@ import axios from 'axios'; // Make sure to install axios if you haven't
 import {useDispatch} from "react-redux";
 import {selectPatient} from "../../features/selectedPatient/patientSlice";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import api from "../../api";
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
 
 const DoctorDashboard = () => {
@@ -26,7 +28,7 @@ const DoctorDashboard = () => {
         // Function to fetch queue data
         const fetchQueue = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/queue');
+                const response = await api.get('/api/queue');
                 setQueue(response.data.map(patient => ({
                     ...patient,
                     statusText: patient.status === 'Completed' ? 'Completed' : 'Start Consultation'
