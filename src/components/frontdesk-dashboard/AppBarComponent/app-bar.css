@@ -1,0 +1,3 @@
+.appBarHeader {
+  width: calc(100% - 240px) !important;
+}
