@@ -4,6 +4,7 @@ import { Typography, Paper, Tabs, Tab, Button, Box } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
@@ -15,7 +16,7 @@ const DocumentationPage = () => {
   const selectedPatient = useSelector((state) => state.patient.selectedPatient);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const formatToJsonDelta = (data) => {
     const ops = []; // Initialize Delta operations array
 
@@ -61,45 +62,41 @@ const DocumentationPage = () => {
   };
 
   useEffect(() => {
-    if (selectedPatient) {
-      const getSummary = async () => {
+    const getSummary = async () => {
+      if (selectedPatient) {
+        setIsLoading(true); // Start loading
         const _id = selectedPatient.patientId;
-        const date = new Date().toISOString().split("T")[0]; // Gets the current date in YYYY-MM-DD format
+        const date = new Date().toISOString().split("T")[0];
 
         try {
           const response = await fetch(
-            `${API_URL}/getSummary?_id=${_id}&date=${date}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+              `${API_URL}/getSummary?_id=${_id}&date=${date}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
           );
 
           if (response.ok) {
             const data = await response.json();
-            console.log("Received data:", data); // Log the entire received data object
-            console.log(
-              "Data types:",
-              typeof data.ehrContent,
-              typeof data.handoutContent
-            );
-            const deltaFormat = formatToJsonDelta(data.patient);
-            setHealthRecordContent(formatToJsonDelta(data.ehrContent)); // Use the Delta format for the EHR editor
-            setPatientHandoutContent(formatToJsonDelta(data.handoutContent)); // Use the Delta format for the Handout editor
+            setHealthRecordContent(formatToJsonDelta(data.ehrContent));
+            setPatientHandoutContent(formatToJsonDelta(data.handoutContent));
           } else {
-            // Handle non-2xx responses
             console.error("Failed to fetch summary:", response.statusText);
           }
         } catch (error) {
           console.error("Error fetching patient summary:", error);
+        } finally {
+          setIsLoading(false); // End loading
         }
-      };
+      }
+    };
 
-      getSummary();
-    }
-  }, [selectedPatient]); // This effect depends on `selectedPatient` and will re-run when it changes
+    getSummary();
+  }, [selectedPatient]);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -204,12 +201,29 @@ const DocumentationPage = () => {
       </Paper>
 
       {value === 0 && (
-        <ReactQuill
-          theme="snow"
-          value={healthRecordContent}
-          onChange={setHealthRecordContent}
-          style={{ height: "300px", marginBottom: "50px" }}
-        />
+          <div style={{ position: 'relative', height: '300px', marginBottom: '50px' }}>
+            <ReactQuill
+                theme="snow"
+                value={healthRecordContent}
+                onChange={setHealthRecordContent}
+                style={{ height: '100%' }}
+            />
+            {isLoading && (
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(255, 255, 255, 0.5)' // Adding a slight white overlay
+                }}>
+                  <CircularProgress />
+                </div>
+            )}
+          </div>
       )}
 
       {value === 1 && (
