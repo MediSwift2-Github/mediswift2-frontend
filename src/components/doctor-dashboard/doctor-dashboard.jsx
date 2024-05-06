@@ -17,12 +17,14 @@ import { selectPatient } from "../../features/selectedPatient/patientSlice";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import api from "../../api";
 import "./doctor-dashboard.css";
+import io from "socket.io-client"; // Import io from socket.io-client
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 const DoctorDashboard = () => {
   const [queue, setQueue] = useState([]); // State to store the queue
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const socket = io.connect(API_URL); // Connect to the socket
 
   useEffect(() => {
     // Function to fetch queue data
@@ -44,6 +46,16 @@ const DoctorDashboard = () => {
     };
 
     fetchQueue(); // Call the function when the component mounts
+    // Setup WebSocket listener for queue updates
+    socket.on("queueUpdate", () => {
+      console.log("Queue update received");
+      fetchQueue(); // Refetch the queue data when an update is received
+    });
+
+    // Cleanup function to remove the socket listener
+    return () => {
+      socket.off("queueUpdate");
+    };
   }, []); // Empty dependency array ensures this runs once on mount
 
   const handleStartConsultation = (patient) => {
