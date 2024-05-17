@@ -7,17 +7,23 @@ import {
   ListItem,
   styled,
   Toolbar,
+  ListItemIcon,
+  ListItemButton,
+  ListItemText,
 } from "@mui/material";
 
 import { NewPatientDialog } from "../dailog-boxes/new-patient-dailog";
 import { OldPatientDialog } from "../dailog-boxes/old-patient-dialog";
 import { DeletePatientDialog } from "../dailog-boxes/delete-patient-dialog";
 import Grid from "@mui/material/Grid";
+import LocalHospitalSharpIcon from "@mui/icons-material/LocalHospitalSharp";
+import Divider from "@mui/material/Divider";
+import InboxIcon from "@mui/icons-material/Inbox";
 
 import "./drawer.css";
 import Typography from "@mui/material/Typography";
 
-const drawerWidth = 240;
+const drawerWidth = "20%";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 const DrawerPaper = styled(Drawer)(({ theme }) => ({
   width: drawerWidth,
@@ -52,35 +58,88 @@ export const DrawerComponent = () => {
   };
 
   return (
-    <DrawerPaper variant="permanent" anchor="left">
+    <DrawerPaper variant="permanent" anchor="left" className="mainDrawer">
       {/* <Toolbar /> */}
-      <Grid className="mainLogo">
-        <Typography variant="h5">MediSwift</Typography>
-      </Grid>
-      <Button color="primary" onClick={handleNewPatientClick}>
-        New Patient
-      </Button>
-      <Button color="secondary" onClick={handleOldPatientClick}>
-        Old Patient
-      </Button>
-      <NewPatientDialog
-        isOpen={isNewPatientDialogOpen}
-        onClose={() => setNewPatientDialogOpen(false)}
-      />
-      <OldPatientDialog
-        isOpen={isOldPatientDialogOpen}
-        onClose={() => setOldPatientDialogOpen(false)}
-      />
-      <Button color="error" onClick={handleDeletePatientClick}>
-        Delete Patient
-      </Button>
-      <Button color="warning" onClick={handleClearQueue}>
-        Clear Queue
-      </Button>
-      <DeletePatientDialog
-        isOpen={isDeletePatientDialogOpen}
-        onClose={() => setDeletePatientDialogOpen(false)}
-      />
+      <Box gap={4} p={2} className="navbarWrapper">
+        <Grid className="mainLogo">
+          <LocalHospitalSharpIcon
+            style={{ marginRight: "2px", height: "30px" }}
+          />
+          <Typography variant="h6">MediSwift</Typography>
+        </Grid>
+        <List>
+          <Divider variant="middle" component="li" className="logoNavDivider" />
+        </List>
+        <List>
+          <ListItem disablePadding>
+            <Button
+              className="currentNav"
+              fullWidth
+              variant="contained"
+              onClick={handleNewPatientClick}
+            >
+              <ListItemIcon style={{ minWidth: "35px" }}>
+                <InboxIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <Typography variant="overline" display="block" gutterBottom>
+                New Patient
+              </Typography>
+            </Button>
+          </ListItem>
+          <ListItem disablePadding>
+            <Button fullWidth onClick={handleOldPatientClick}>
+              <ListItemIcon style={{ minWidth: "35px" }}>
+                <InboxIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <Typography variant="overline" display="block" gutterBottom>
+                Old Patient
+              </Typography>
+            </Button>
+          </ListItem>
+          <ListItem disablePadding>
+            <Button fullWidth onClick={handleDeletePatientClick}>
+              <ListItemIcon style={{ minWidth: "35px" }}>
+                <InboxIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <Typography variant="overline" display="block" gutterBottom>
+                Delete Patient
+              </Typography>
+            </Button>
+          </ListItem>
+          <ListItem disablePadding>
+            <Button fullWidth onClick={handleClearQueue}>
+              <ListItemIcon style={{ minWidth: "35px" }}>
+                <InboxIcon style={{ color: "white" }} />
+              </ListItemIcon>
+              <Typography variant="overline" display="block" gutterBottom>
+                Clear Queue
+              </Typography>
+            </Button>
+          </ListItem>
+        </List>
+        {/* <Box classNam="buyPremium">
+          <Button fullWidth variant="contained">
+            <ListItemIcon style={{ minWidth: "35px" }}>
+              <InboxIcon style={{ color: "white" }} />
+            </ListItemIcon>
+            <Typography variant="overline" display="block" gutterBottom>
+              UPDRAGE TO PRO
+            </Typography>
+          </Button>
+        </Box> */}
+        <NewPatientDialog
+          isOpen={isNewPatientDialogOpen}
+          onClose={() => setNewPatientDialogOpen(false)}
+        />
+        <OldPatientDialog
+          isOpen={isOldPatientDialogOpen}
+          onClose={() => setOldPatientDialogOpen(false)}
+        />
+        <DeletePatientDialog
+          isOpen={isDeletePatientDialogOpen}
+          onClose={() => setDeletePatientDialogOpen(false)}
+        />
+      </Box>
     </DrawerPaper>
   );
 };

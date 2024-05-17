@@ -1,7 +1,84 @@
+/* #f0f2f5 */
 .mainLogo {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 65px;
+  height: 50px;
   cursor: pointer;
+  color: white;
+}
+
+.mainDrawer > div {
+  border: none;
+  background-color: #f0f2f5;
+}
+
+.navbarWrapper {
+  margin-top: 17px;
+  margin-left: 17px;
+  background-color: #2d2d31;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  height: 575px;
+}
+
+.navbarWrapper > ul > li > .currentNav {
+  height: 48px;
+  display: flex;
+  justify-content: left;
+  background: linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232));
+}
+
+.navbarWrapper > ul > li > button {
+  height: 48px;
+  display: flex;
+  justify-content: left;
+  color: white;
+}
+
+.navbarWrapper > ul > li > button:hover {
+  background-color: rgb(255 255 255 / 20%);
+}
+
+.navbarWrapper > ul > li > button > div > svg {
+  font-size: 20px !important;
+}
+
+.navbarWrapper > ul > li > button > span {
+  margin-bottom: 0px !important;
+  line-height: 0px !important;
+  text-transform: capitalize;
+}
+
+.navbarWrapper > ul {
+  padding: 0px !important;
+}
+
+.navbarWrapper > ul > li {
+  margin-bottom: 5px;
+}
+
+.logoNavDivider {
+  color: rgba(0, 0, 0, 0.87) !important;
+  flex-shrink: 0 !important;
+  border-top: 0px solid rgba(0, 0, 0, 0.08) !important;
+  border-right: 0px solid rgba(0, 0, 0, 0.08) !important;
+  border-left: 0px solid rgba(0, 0, 0, 0.08) !important;
+  height: 0.0625rem !important;
+  margin: 1rem 0px !important;
+  border-bottom: none !important;
+  opacity: 0.25 !important;
+  background-color: transparent !important;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgb(255, 255, 255),
+    rgba(255, 255, 255, 0)
+  ) !important;
+  white-space: nowrap !important;
+}
+
+.buyPremium {
+  position: absolute;
+  bottom: 10px;
 }

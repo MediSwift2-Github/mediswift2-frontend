@@ -1,12 +1,19 @@
 .frontdesk-dashboard {
-    background-color: #4c9ccc;
-    color: white;
-    /* add more styling as needed */
+  background-color: #4c9ccc;
+  color: white;
+  /* add more styling as needed */
 }
 
 .status-button {
-    background-color: #84cc2c;
-    /* add more styling as needed */
+  background-color: #84cc2c;
+  /* add more styling as needed */
 }
+
+/* frontdesk-dashboard.css */
+/* .patientListWrapper {
+  margin-top: 54px;
+} */
+
+/* backdrop-filter: saturate(200%) blur(1.875rem); */
 
 /* Continue styling other elements as necessary */
