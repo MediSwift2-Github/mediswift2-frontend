@@ -11,13 +11,20 @@ export const AppBarComponent = ({ navBarStyle, loc }) => (
     sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     style={{
       marginTop: "17px",
-      backgroundColor: `${navBarStyle == "top" ? "transparent" : "none"}`,
-      backdropFilter: `${
-        navBarStyle == "hide" ? "saturate(200%) blur(1.875rem)" : "none"
+      backgroundColor: `${
+        navBarStyle == "top" ? "transparent" : "rgba(255, 255, 255, 0.8)"
       }`,
-      border: `${navBarStyle == "hide" ? "1px solid white" : "none"}`,
-      paddingLeft: "5px",
-      boxShadow: "none",
+      backdropFilter: `${
+        navBarStyle == "hide" && "saturate(200%) blur(1.875rem)"
+      }`,
+      border: `${navBarStyle == "top" ? "none" : "1px solid white"}`,
+      // paddingLeft: "5px",
+      boxShadow: `${
+        navBarStyle == "top"
+          ? "none"
+          : "rgba(255, 255, 255, 0.9) 0rem 0rem 0.0625rem 0.0625rem inset, rgba(0, 0, 0, 0.05) 0rem 1.25rem 1.6875rem 0rem"
+      }`,
+      borderRadius: "0.75rem",
     }}
   >
     <Toolbar

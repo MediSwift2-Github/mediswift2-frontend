@@ -54,37 +54,42 @@ export const PatientTable = () => {
   }, []); // Empty dependency array means this effect runs once on mount
 
   return (
-    <TableContainer component={Paper} sx={{ maxWidth: "100%", height: 335 }}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Serial Number</TableCell>
-            <TableCell>Patient Name</TableCell>
-            <TableCell>Status</TableCell>
+    // <TableContainer component={Paper} sx={{ maxWidth: "100%" }}>
+    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Serial Number</TableCell>
+          <TableCell>Patient Name</TableCell>
+          <TableCell>Status</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {rows.map((row, index) => (
+          <TableRow
+            key={row.id}
+            sx={{
+              "&:last-child td, &:last-child th": { border: 0 },
+              backgroundColor:
+                row.status === "Completed" ? "#e0e0e0" : "inherit", // Grey out if completed
+            }}
+          >
+            <TableCell
+              component="th"
+              scope="row"
+              style={{ marginLeft: "15px", padding: "16px 16px 16px 30px" }}
+            >
+              {index + 1} {/* Here we use the index for the serial number */}
+            </TableCell>
+            <TableCell>{row.name}</TableCell>
+            <TableCell>
+              <Button variant="outlined" disabled={row.status === "Completed"}>
+                {row.status}
+              </Button>
+            </TableCell>
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row, index) => (
-              <TableRow
-                  key={row.id}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    backgroundColor: row.status === "Completed" ? "#e0e0e0" : "inherit", // Grey out if completed
-                  }}
-              >
-              <TableCell component="th" scope="row">
-                {index + 1} {/* Here we use the index for the serial number */}
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>
-                <Button variant="outlined" disabled={row.status === "Completed"}>
-                  {row.status}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        ))}
+      </TableBody>
+    </Table>
+    // </TableContainer>
   );
 };

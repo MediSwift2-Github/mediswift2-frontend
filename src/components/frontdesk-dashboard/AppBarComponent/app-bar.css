@@ -1,6 +1,6 @@
 .appBarHeader {
-  width: calc(100% - 335px) !important;
-  margin-right: 10px;
+  width: calc(100% - 22%) !important;
+  margin-right: calc(100% - 99%);
 }
 
 .appBarBorder {

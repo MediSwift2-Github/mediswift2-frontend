@@ -19,6 +19,10 @@ import Grid from "@mui/material/Grid";
 import LocalHospitalSharpIcon from "@mui/icons-material/LocalHospitalSharp";
 import Divider from "@mui/material/Divider";
 import InboxIcon from "@mui/icons-material/Inbox";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import GroupRemoveIcon from "@mui/icons-material/GroupRemove";
 
 import "./drawer.css";
 import Typography from "@mui/material/Typography";
@@ -79,7 +83,7 @@ export const DrawerComponent = () => {
               onClick={handleNewPatientClick}
             >
               <ListItemIcon style={{ minWidth: "35px" }}>
-                <InboxIcon style={{ color: "white" }} />
+                <AddIcon style={{ color: "white" }} />
               </ListItemIcon>
               <Typography variant="overline" display="block" gutterBottom>
                 New Patient
@@ -89,7 +93,7 @@ export const DrawerComponent = () => {
           <ListItem disablePadding>
             <Button fullWidth onClick={handleOldPatientClick}>
               <ListItemIcon style={{ minWidth: "35px" }}>
-                <InboxIcon style={{ color: "white" }} />
+                <SearchIcon style={{ color: "white" }} />
               </ListItemIcon>
               <Typography variant="overline" display="block" gutterBottom>
                 Old Patient
@@ -99,7 +103,7 @@ export const DrawerComponent = () => {
           <ListItem disablePadding>
             <Button fullWidth onClick={handleDeletePatientClick}>
               <ListItemIcon style={{ minWidth: "35px" }}>
-                <InboxIcon style={{ color: "white" }} />
+                <DeleteOutlineIcon style={{ color: "white" }} />
               </ListItemIcon>
               <Typography variant="overline" display="block" gutterBottom>
                 Delete Patient
@@ -109,7 +113,7 @@ export const DrawerComponent = () => {
           <ListItem disablePadding>
             <Button fullWidth onClick={handleClearQueue}>
               <ListItemIcon style={{ minWidth: "35px" }}>
-                <InboxIcon style={{ color: "white" }} />
+                <GroupRemoveIcon style={{ color: "white" }} />
               </ListItemIcon>
               <Typography variant="overline" display="block" gutterBottom>
                 Clear Queue

@@ -14,12 +14,11 @@
 }
 
 .navbarWrapper {
-  margin-top: 17px;
-  margin-left: 17px;
   background-color: #2d2d31;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  height: 575px;
+  height: 100%;
+  margin: 17px !important;
 }
 
 .navbarWrapper > ul > li > .currentNav {
