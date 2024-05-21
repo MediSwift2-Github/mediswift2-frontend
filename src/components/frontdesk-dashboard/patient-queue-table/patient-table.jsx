@@ -12,6 +12,7 @@ import {
 import axios from "axios"; // Make sure to install axios if you haven't
 import io from "socket.io-client";
 import api from "../../../api";
+
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 const socket = io.connect(API_URL);

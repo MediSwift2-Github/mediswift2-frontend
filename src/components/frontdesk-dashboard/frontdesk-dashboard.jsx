@@ -12,8 +12,6 @@ const FrontDeskDashboard = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const location = useLocation();
 
-  console.log("location---->>", location.pathname);
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
@@ -37,8 +35,6 @@ const FrontDeskDashboard = () => {
       window.removeEventListener("scroll", controlNavbar);
     };
   }, [lastScrollY]);
-
-  console.log("show---->>", show);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>

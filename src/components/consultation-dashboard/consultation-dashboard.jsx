@@ -5,6 +5,13 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./consultation-dashboard.css"; // Assuming basic CSS setup for now
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
@@ -156,23 +163,99 @@ const ConsultationDashboard = () => {
     }
   };
 
+  const formatKey = (key) => {
+    return key
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase());
+  };
+
+  const formatValue = (value) => {
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    } else if (value === null) {
+      return "None";
+    } else if (typeof value === "object") {
+      return Object.entries(value)
+        .map(
+          ([nestedKey, nestedValue]) =>
+            `${formatKey(nestedKey)}: ${formatValue(nestedValue)}`
+        )
+        .join(" -- ");
+    } else {
+      return value;
+    }
+  };
+
   return (
     <div className="consultation-dashboard">
-      <h1>Consultation Dashboard</h1>
-      <Button variant="contained" onClick={toggleRecording}>
-        {recording ? "Stop Recording" : "Start Recording"}
-      </Button>
-      {sessionSummary ? (
-        <div>
-          <h2>Summary for {summaryDate}</h2>
-          {renderJson(sessionSummary)}
-        </div>
-      ) : (
-        <Typography variant="overline" display="block" gutterBottom>
-          Loading session summary...
-        </Typography>
-      )}
-      <Button variant="contained" onClick={navigateToDocumentationPage}>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">
+                <Typography variant="h5" gutterBottom>
+                  Consultation Dashboard
+                </Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Button variant="outlined" onClick={toggleRecording}>
+                  {recording ? "Stop Recording" : "Start Recording"}
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center" colSpan={3}>
+                <Typography variant="h6" display="block" gutterBottom>
+                  Summary for {summaryDate}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          {/* {console.log(renderJson(sessionSummary))} */}
+          <TableBody>
+            {sessionSummary ? (
+              <>
+                {Object.entries(sessionSummary).map(([key, value]) => (
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">
+                      <Typography
+                        key={key}
+                        variant="subtitle2"
+                        display="block"
+                        gutterBottom
+                      >
+                        {`${formatKey(key)}`}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        variant="subtitle2"
+                        display="block"
+                        gutterBottom
+                        key={key}
+                      >
+                        {`${formatValue(value)}`}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            ) : (
+              <Typography variant="overline" display="block" gutterBottom>
+                Loading session summary...
+              </Typography>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Button
+        fullWidth
+        variant="contained"
+        onClick={navigateToDocumentationPage}
+        style={{ marginTop: 20 }}
+      >
         Start Documentation
       </Button>
     </div>

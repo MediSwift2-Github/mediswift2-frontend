@@ -22,18 +22,48 @@ import api from "../../api";
 import "./doctor-dashboard.css";
 import io from "socket.io-client"; // Import io from socket.io-client
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useLocation } from "react-router-dom";
+
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 const ITEM_HEIGHT = 48;
 
 const DoctorDashboard = () => {
+  const [show, setShow] = useState("top");
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [queue, setQueue] = useState([]); // State to store the queue
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const socket = io.connect(API_URL); // Connect to the socket
+  const location = useLocation();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  const controlNavbar = () => {
+    if (window.scrollY > 10) {
+      if (window.scrollY > lastScrollY) {
+        setShow("hide");
+      } else {
+        setShow("stickyTableHead");
+      }
+    } else {
+      setShow("top");
+    }
+    setLastScrollY(window.scrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", controlNavbar);
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+    };
+  }, [lastScrollY]);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -101,8 +131,12 @@ const DoctorDashboard = () => {
       >
         Consultation Dashboard
       </Typography>
-      <TableContainer component={Paper} style={{ borderRadius: "0.75rem" }}>
-        <Table aria-label="simple table" style={{ marginTop: "70px" }}>
+      <TableContainer
+        component={Paper}
+        className={show == "top" ? "none" : "tableWrapper"}
+        style={{ borderRadius: "0.75rem" }}
+      >
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell
@@ -112,7 +146,14 @@ const DoctorDashboard = () => {
                   fontSize: "0.65rem",
                   fontWeight: "700",
                   textTransform: "uppercase",
+                  transition:
+                    "padding-top 1s ease, background-color 0.5s ease,padding 1s ease",
+                  paddingTop: show === "top" ? "70px" : "10px",
+                  backgroundColor: show === "top" ? "transparent" : "lightgray",
                 }}
+                className={
+                  show == "top" ? "removeStickyTableHead" : "stickyTableHead"
+                }
               >
                 Sr No.
               </TableCell>
@@ -123,7 +164,14 @@ const DoctorDashboard = () => {
                   fontSize: "0.65rem",
                   fontWeight: "700",
                   textTransform: "uppercase",
+                  transition:
+                    "padding-top 1s ease, background-color 0.5s ease,padding 1s ease",
+                  paddingTop: show === "top" ? "70px" : "10px",
+                  backgroundColor: show === "top" ? "transparent" : "lightgray",
                 }}
+                className={
+                  show == "top" ? "removeStickyTableHead" : "stickyTableHead"
+                }
               >
                 Patient Name
               </TableCell>
@@ -134,7 +182,14 @@ const DoctorDashboard = () => {
                   fontSize: "0.65rem",
                   fontWeight: "700",
                   textTransform: "uppercase",
+                  transition:
+                    "padding-top 1s ease, background-color 0.5s ease,padding 1s ease",
+                  paddingTop: show === "top" ? "70px" : "10px",
+                  backgroundColor: show === "top" ? "transparent" : "lightgray",
                 }}
+                className={
+                  show == "top" ? "removeStickyTableHead" : "stickyTableHead"
+                }
                 align="center"
               >
                 Status
@@ -146,7 +201,14 @@ const DoctorDashboard = () => {
                   fontSize: "0.65rem",
                   fontWeight: "700",
                   textTransform: "uppercase",
+                  transition:
+                    "padding-top 1s ease, background-color 0.5s ease,padding 1s ease",
+                  paddingTop: show === "top" ? "70px" : "10px",
+                  backgroundColor: show === "top" ? "transparent" : "lightgray",
                 }}
+                className={
+                  show == "top" ? "removeStickyTableHead" : "stickyTableHead"
+                }
                 align="center"
               >
                 Action

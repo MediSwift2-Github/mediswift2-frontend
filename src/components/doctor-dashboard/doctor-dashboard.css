@@ -12,3 +12,19 @@
   box-shadow: rgba(0, 0, 0, 0.14) 0rem 0.25rem 1.25rem 0rem,
     rgba(0, 187, 212, 0.4) 0rem 0.4375rem 0.625rem -0.3125rem;
 }
+
+.stickyTableHead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.removeStickyTableHead {
+  position: static;
+  top: 0;
+  z-index: 1;
+}
+
+.tableWrapper {
+  overflow: visible !important;
+}
