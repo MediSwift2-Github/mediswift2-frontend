@@ -187,27 +187,43 @@ const ConsultationDashboard = () => {
   };
 
   return (
-    <div className="consultation-dashboard">
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <div
+      className="consultation-dashboard"
+      style={{ maxWidth: 1150, margin: "50px auto", padding: "17px" }}
+    >
+      <TableContainer component={Paper} className="tableContainer">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">
-                <Typography variant="h5" gutterBottom>
+              <TableCell
+                align="center"
+                colSpan={2}
+                style={{ padding: 40, position: "relative" }}
+              >
+                <Typography
+                  variant="h4"
+                  component="h6"
+                  className="title"
+                  style={{ fontSize: "1rem", fontWeight: "bolder" }}
+                >
                   Consultation Dashboard
+                </Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="left">
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  style={{ color: "rgb(123, 128, 154)" }}
+                >
+                  Summary for {summaryDate}
                 </Typography>
               </TableCell>
               <TableCell align="right">
                 <Button variant="outlined" onClick={toggleRecording}>
                   {recording ? "Stop Recording" : "Start Recording"}
                 </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align="center" colSpan={3}>
-                <Typography variant="h6" display="block" gutterBottom>
-                  Summary for {summaryDate}
-                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -225,6 +241,7 @@ const ConsultationDashboard = () => {
                         variant="subtitle2"
                         display="block"
                         gutterBottom
+                        style={{ color: "rgb(123, 128, 154)" }}
                       >
                         {`${formatKey(key)}`}
                       </Typography>
@@ -235,6 +252,7 @@ const ConsultationDashboard = () => {
                         display="block"
                         gutterBottom
                         key={key}
+                        style={{ color: "rgb(123, 128, 154)" }}
                       >
                         {`${formatValue(value)}`}
                       </Typography>
@@ -243,9 +261,20 @@ const ConsultationDashboard = () => {
                 ))}
               </>
             ) : (
-              <Typography variant="overline" display="block" gutterBottom>
-                Loading session summary...
-              </Typography>
+              <TableRow
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center" colSpan={3}>
+                  <Typography
+                    variant="overline"
+                    display="block"
+                    gutterBottom
+                    style={{ color: "rgb(123, 128, 154)", textAlign: "center" }}
+                  >
+                    Loading session summary...
+                  </Typography>
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
@@ -254,7 +283,7 @@ const ConsultationDashboard = () => {
         fullWidth
         variant="contained"
         onClick={navigateToDocumentationPage}
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 20, maxWidth: 1200 }}
       >
         Start Documentation
       </Button>

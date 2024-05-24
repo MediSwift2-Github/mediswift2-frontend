@@ -124,12 +124,12 @@ const DoctorDashboard = () => {
       }}
     >
       <Typography
-        className="title"
+        className="doctorDashboardtitle"
         variant="h4"
         component="h6"
         style={{ fontSize: "1rem", fontWeight: "bolder" }}
       >
-        Consultation Dashboard
+        Doctor Dashboard
       </Typography>
       <TableContainer
         component={Paper}
