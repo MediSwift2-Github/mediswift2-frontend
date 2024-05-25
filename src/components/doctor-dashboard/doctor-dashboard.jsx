@@ -34,7 +34,7 @@ const DoctorDashboard = () => {
   const [queue, setQueue] = useState([]); // State to store the queue
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const socket = io.connect(API_URL); // Connect to the socket
+  const socket = io(API_URL, { autoConnect: false }); // Initialize the socket with autoConnect set to false
   const location = useLocation();
   const [anchorEls, setAnchorEls] = useState({});
 
@@ -70,7 +70,9 @@ const DoctorDashboard = () => {
     };
 
   useEffect(() => {
-    // Function to fetch queue data
+      socket.connect(); // Connect the socket
+
+      // Function to fetch queue data
     const fetchQueue = async () => {
       try {
         const response = await api.get("/api/queue");
@@ -98,6 +100,7 @@ const DoctorDashboard = () => {
     // Cleanup function to remove the socket listener
     return () => {
       socket.off("queueUpdate");
+      socket.disconnect(); // Disconnect the socket on component unmount
     };
   }, []); // Empty dependency array ensures this runs once on mount
 
