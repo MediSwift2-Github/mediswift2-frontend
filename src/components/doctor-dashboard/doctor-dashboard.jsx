@@ -36,9 +36,7 @@ const DoctorDashboard = () => {
   const navigate = useNavigate();
   const socket = io.connect(API_URL); // Connect to the socket
   const location = useLocation();
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const [anchorEls, setAnchorEls] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -64,12 +62,12 @@ const DoctorDashboard = () => {
     };
   }, [lastScrollY]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    const handleClick = (event, patientId) => {
+        setAnchorEls((prev) => ({ ...prev, [patientId]: event.currentTarget }));
+    };
+    const handleClose = (patientId) => {
+        setAnchorEls((prev) => ({ ...prev, [patientId]: null }));
+    };
 
   useEffect(() => {
     // Function to fetch queue data
@@ -244,44 +242,40 @@ const DoctorDashboard = () => {
                   {entry.status}
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={open ? "long-menu" : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="long-menu"
-                    MenuListProps={{
-                      "aria-labelledby": "long-button",
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                      style: {
-                        maxHeight: ITEM_HEIGHT * 4.5,
-                        width: "20ch",
-                      },
-                    }}
-                  >
-                    <MenuItem
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleStartConsultation(entry)}
-                      disabled={entry.status === "Completed"}
-                      // style={{
-                      //   background:
-                      //     "linear-gradient(195deg, rgb(102, 187, 106), rgb(67, 160, 71))",
-                      // }}
+                    <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={anchorEls[entry._id] ? "long-menu" : undefined}
+                        aria-expanded={anchorEls[entry._id] ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={(event) => handleClick(event, entry._id)}
                     >
-                      {entry.statusText}
-                    </MenuItem>
-                  </Menu>
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="long-menu"
+                        MenuListProps={{
+                            "aria-labelledby": "long-button",
+                        }}
+                        anchorEl={anchorEls[entry._id]}
+                        open={Boolean(anchorEls[entry._id])}
+                        onClose={() => handleClose(entry._id)}
+                        PaperProps={{
+                            style: {
+                                maxHeight: ITEM_HEIGHT * 4.5,
+                                width: "20ch",
+                            },
+                        }}
+                    >
+                        <MenuItem
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleStartConsultation(entry)}
+                            disabled={entry.status === "Completed"}
+                        >
+                            {entry.statusText}
+                        </MenuItem>
+                    </Menu>
                   {/* <Button
                     variant="contained"
                     color="primary"
