@@ -235,7 +235,7 @@ const ConsultationDashboard = () => {
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">
+                    <TableCell align="left">
                       <Typography
                         key={key}
                         variant="subtitle2"
@@ -246,13 +246,15 @@ const ConsultationDashboard = () => {
                         {`${formatKey(key)}`}
                       </Typography>
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="left">
                       <Typography
                         variant="subtitle2"
                         display="block"
                         gutterBottom
                         key={key}
-                        style={{ color: "rgb(123, 128, 154)" }}
+                        style={{
+                          color: "rgb(123, 128, 154)",
+                        }}
                       >
                         {`${formatValue(value)}`}
                       </Typography>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import "./login-page.css";
@@ -6,6 +6,7 @@ import logo from "./MediSwift.png";
 import api from "../../api";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -47,23 +48,23 @@ const LoginPage = () => {
     event.preventDefault();
   };
 
+  console.log("username---->>", username);
+
   return (
     <div className="login-container">
       <img src={logo} alt="Logo" className="logo" />
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit}>
         <div className="form-group">
           <TextField
-            id="username"
             label="Username"
             variant="outlined"
             required
-            value={username}
+            value={username ? username : null}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="form-group">
           <TextField
-            id="password"
             label="Password"
             variant="outlined"
             type={showPassword ? "text" : "password"}
@@ -82,7 +83,7 @@ const LoginPage = () => {
               ),
             }}
             required
-            value={password}
+            value={password ? password : null}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>

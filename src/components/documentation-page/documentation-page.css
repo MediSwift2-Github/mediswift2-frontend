@@ -1,0 +1,14 @@
+.documentationDashboardtitle {
+  text-align: left;
+  padding: 27px;
+  font-size: 1rem;
+  background: linear-gradient(195deg, rgb(73, 163, 241), rgb(26, 115, 232));
+  border-radius: 0.75rem;
+  position: absolute;
+  width: calc(100% - 3%);
+  top: -20px;
+  left: 1.6%;
+  color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.14) 0rem 0.25rem 1.25rem 0rem,
+    rgba(0, 187, 212, 0.4) 0rem 0.4375rem 0.625rem -0.3125rem;
+}

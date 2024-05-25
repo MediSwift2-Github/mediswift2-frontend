@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import "./documentation-page.css";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
@@ -70,13 +71,13 @@ const DocumentationPage = () => {
 
         try {
           const response = await fetch(
-              `${API_URL}/getSummary?_id=${_id}&date=${date}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
+            `${API_URL}/getSummary?_id=${_id}&date=${date}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
           );
 
           if (response.ok) {
@@ -96,7 +97,6 @@ const DocumentationPage = () => {
 
     getSummary();
   }, [selectedPatient]);
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -182,9 +182,32 @@ const DocumentationPage = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", mt: 4, mb: 2 }}>
-      <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" gutterBottom>
+    <Box
+      sx={{
+        width: "100%",
+        padding: "50px 50px 0px 50px",
+        maxWidth: 1235,
+        margin: "0 auto",
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          p: 2,
+          mb: 2,
+          position: "relative",
+          borderRadius: "0.75rem !important",
+        }}
+      >
+        <Typography
+          className="documentationDashboardtitle"
+          variant="h4"
+          component="h6"
+          style={{
+            fontSize: "1rem",
+            fontWeight: "bolder",
+          }}
+        >
           Notes for{" "}
           {selectedPatient ? selectedPatient.patientName : "Select a Patient"}
         </Typography>
@@ -194,6 +217,7 @@ const DocumentationPage = () => {
           indicatorColor="primary"
           textColor="primary"
           centered
+          style={{ paddingTop: "60px" }}
         >
           <Tab label="Health Record" />
           <Tab label="Patient Handout" />
@@ -201,29 +225,37 @@ const DocumentationPage = () => {
       </Paper>
 
       {value === 0 && (
-          <div style={{ position: 'relative', height: '300px', marginBottom: '50px' }}>
-            <ReactQuill
-                theme="snow"
-                value={healthRecordContent}
-                onChange={setHealthRecordContent}
-                style={{ height: '100%' }}
-            />
-            {isLoading && (
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)' // Adding a slight white overlay
-                }}>
-                  <CircularProgress />
-                </div>
-            )}
-          </div>
+        <div
+          style={{
+            position: "relative",
+            height: "300px",
+            marginBottom: "50px",
+          }}
+        >
+          <ReactQuill
+            theme="snow"
+            value={healthRecordContent}
+            onChange={setHealthRecordContent}
+            style={{ height: "100%" }}
+          />
+          {isLoading && (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(255, 255, 255, 0.5)", // Adding a slight white overlay
+              }}
+            >
+              <CircularProgress />
+            </div>
+          )}
+        </div>
       )}
 
       {value === 1 && (
