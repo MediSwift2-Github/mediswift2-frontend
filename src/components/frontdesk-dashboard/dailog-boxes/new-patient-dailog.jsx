@@ -6,14 +6,17 @@ import {
   TextField,
   Button,
   DialogActions,
+  CircularProgress,
 } from "@mui/material";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export const NewPatientDialog = ({ isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [loading, setLoading] = useState(false); // Add a loading state
 
   const handleAddPatient = async () => {
+    setLoading(true); // Set loading to true when the request starts
     try {
       // Construct the patient data
       const patientData = {
@@ -64,6 +67,8 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
     } catch (error) {
       // Handle any errors that occurred during the fetch operations
       console.error("Error during patient add or queue operation", error);
+    } finally {
+      setLoading(false); // Set loading to false when the request ends
     }
 
     onClose(); // Close the dialog after submitting
@@ -97,8 +102,8 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleAddPatient} variant="contained" color="primary">
-          Add Patient
+        <Button onClick={handleAddPatient} variant="contained" color="primary" disabled={loading} >
+            {loading ? <CircularProgress size={24} /> : "Add Patient"}
         </Button>
       </DialogActions>
     </Dialog>
