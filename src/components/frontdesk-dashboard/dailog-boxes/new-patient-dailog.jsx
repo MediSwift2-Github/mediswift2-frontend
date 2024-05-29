@@ -17,11 +17,31 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
 
   const handleAddPatient = async () => {
     setLoading(true); // Set loading to true when the request starts
+    setContactError(false); // Reset the error state before validation
     try {
+
+      let formattedContact = contact;
+
+      // Check if the mobile number is a 10-digit number
+      if (/^\d{10}$/.test(contact)) {
+        formattedContact = `91${contact}`;
+      }
+      // Check if the mobile number is a 12-digit number starting with 91 or 49
+      else if (/^(91)\d{10}$/.test(contact)) {
+        // No changes needed
+      }
+      // If the mobile number does not match the above conditions, show an error
+      else {
+        console.error("Invalid mobile number");
+        setContactError(true); // Add this line to display the error
+
+        // You can display an error message to the user here
+        return;
+      }
       // Construct the patient data
       const patientData = {
         name,
-        mobile_number: contact,
+        mobile_number: formattedContact,
         medical_history: [], // You can initially send an empty array or omit this if your backend handles it
       };
 
@@ -73,6 +93,8 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
 
     onClose(); // Close the dialog after submitting
   };
+  // Add an error state for the contact field
+  const [contactError, setContactError] = useState(false);
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
@@ -98,6 +120,8 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
           variant="outlined"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
+          error={contactError} // Show an error state if contactError is true
+          helperText={contactError ? "Invalid mobile number" : ""} // Display an error message if contactError is true
         />
       </DialogContent>
       <DialogActions>
