@@ -212,15 +212,15 @@ const DocumentationPage = () => {
           {selectedPatient ? selectedPatient.patientName : "Select a Patient"}
         </Typography>
         <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          centered
-          style={{ paddingTop: "60px" }}
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+            style={{ paddingTop: "60px" }}
         >
           <Tab label="Health Record" />
-          <Tab label="Patient Handout" />
+          <Tab label="Patient Handout" disabled/>
         </Tabs>
       </Paper>
 
