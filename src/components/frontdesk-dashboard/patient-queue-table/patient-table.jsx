@@ -30,8 +30,10 @@ export const PatientTable = () => {
         const queueData = response.data.map((entry) => ({
           id: entry._id, // Use the queue entry's _id for key
           name: entry.patientName, // Use the patientName from the queue entry
+          mobileNumber: entry.patientMobileNumber, // Add this line
           status: entry.status, // Status is unchanged
         }));
+        console.log(queueData);
         setRows(queueData);
       } catch (error) {
         console.error("Failed to fetch queue entries:", error);
@@ -61,6 +63,7 @@ export const PatientTable = () => {
         <TableRow>
           <TableCell>Serial Number</TableCell>
           <TableCell>Patient Name</TableCell>
+          <TableCell>Mobile Number</TableCell>
           <TableCell>Status</TableCell>
         </TableRow>
       </TableHead>
@@ -82,6 +85,7 @@ export const PatientTable = () => {
               {index + 1} {/* Here we use the index for the serial number */}
             </TableCell>
             <TableCell>{row.name}</TableCell>
+            <TableCell>{row.mobileNumber}</TableCell>
             <TableCell>
               <Button variant="outlined" disabled={row.status === "Completed"}>
                 {row.status}
