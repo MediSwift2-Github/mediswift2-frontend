@@ -21,6 +21,7 @@ const ConsultationDashboard = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioChunks, setAudioChunks] = useState([]);
   const navigate = useNavigate(); // Initialize useNavigate hook
+  const [loading, setLoading] = useState(false);
 
   // Function that navigates to the Documentation Page
   const navigateToDocumentationPage = () => {
@@ -55,55 +56,63 @@ const ConsultationDashboard = () => {
 
   // Function to stop recording and send audio to the backend
   const stopRecording = () => {
-    if (mediaRecorder) {
-      const finalChunkPromise = new Promise((resolve) => {
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            setAudioChunks((currentChunks) => {
-              const newChunks = [...currentChunks, event.data];
-              resolve(newChunks);
-              return newChunks;
-            });
-          }
-        };
-      });
-
-      mediaRecorder.stop(); // This will trigger the ondataavailable one last time
-      setRecording(false);
-      mediaRecorder.stream.getTracks().forEach((track) => track.stop()); // Stop the media stream
-
-      finalChunkPromise.then((finalChunks) => {
-        const audioBlob = new Blob(finalChunks, { type: "audio/mp3" });
-
-        // Create FormData to send the blob
-        const formData = new FormData();
-        formData.append("audioFile", audioBlob, "recording.mp3");
-        formData.append("patientId", patientId);
-        formData.append("summaryDate", summaryDate);
-
-        // Add any other metadata you might need to send
-
-        // Use fetch to send the audio blob to your server
-        fetch(`${API_URL}/api/audio/upload`, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
+    return new Promise((resolve, reject) => { // Add Promise definition
+      if (mediaRecorder) {
+        const finalChunkPromise = new Promise((resolveChunk) => {
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              setAudioChunks((currentChunks) => {
+                const newChunks = [...currentChunks, event.data];
+                resolveChunk(newChunks);
+                return newChunks;
+              });
             }
-            return response.json();
+          };
+        });
+
+        mediaRecorder.stop(); // This will trigger the ondataavailable one last time
+        setRecording(false);
+        mediaRecorder.stream.getTracks().forEach((track) => track.stop()); // Stop the media stream
+
+        finalChunkPromise.then((finalChunks) => {
+          const audioBlob = new Blob(finalChunks, { type: "audio/mp3" });
+
+          // Create FormData to send the blob
+          const formData = new FormData();
+          formData.append("audioFile", audioBlob, "recording.mp3");
+          formData.append("patientId", patientId);
+          formData.append("summaryDate", summaryDate);
+
+          // Add any other metadata you might need to send
+
+          // Use fetch to send the audio blob to your server
+          fetch(`${API_URL}/api/audio/upload`, {
+            method: "POST",
+            body: formData,
           })
-          .then((data) => {
-            console.log("Success:", data);
-            // Handle success, maybe set some state to show the upload was successful
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            // Handle error, maybe set some state to show the upload failed
-          });
-      });
-    }
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Success:", data);
+                // Handle success, maybe set some state to show the upload was successful
+                setRecording(false); // Move this line here to ensure state is updated only after successful transcription
+                resolve(data); // Resolve the promise with the data from the server
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                // Handle error, maybe set some state to show the upload failed
+                setRecording(false); // Move this line here to ensure state is updated even if there is an error
+                reject(error); // Reject the promise with the error
+              });
+        });
+      } else {
+        reject(new Error("No mediaRecorder found")); // Handle case where mediaRecorder is not defined
+      }
+    });
   };
 
   // Toggle recording state
@@ -286,12 +295,27 @@ const ConsultationDashboard = () => {
         </Table>
       </TableContainer>
       <Button
-        fullWidth
-        variant="contained"
-        onClick={navigateToDocumentationPage}
-        style={{ marginTop: 20, maxWidth: 1200 }}
+          fullWidth
+          variant="contained"
+          onClick={async () => {
+            setLoading(true); // Set loading to true when processing starts
+            if (recording) {
+              try {
+                const data = await stopRecording(); // Ensure it waits for the transcription before navigating
+                console.log("Transcription data:", data); // You can log the data or handle it as needed
+              } catch (error) {
+                console.error("Error during transcription:", error); // Handle any errors during the transcription process
+              }
+            } else {
+              console.log("No recording was initiated.");
+            }
+            setLoading(false); // Set loading to false when processing ends
+            navigateToDocumentationPage(); // Navigate to the documentation page
+          }}
+          style={{ marginTop: 20, maxWidth: 1200 }}
+          disabled={loading} // Disable the button when loading
       >
-        Start Documentation
+        {loading ? "Processing..." : "Start Documentation"}
       </Button>
     </div>
   );
