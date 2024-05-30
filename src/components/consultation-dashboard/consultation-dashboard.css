@@ -22,3 +22,28 @@
   overflow: visible !important;
   border-radius: 0.75rem !important;
 }
+.recording-button {
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.recording-button.active {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    background-color: #ff5252; /* Slightly lighter for better visibility */
+    box-shadow: 0 0 10px rgba(255, 82, 82, 0.5);
+  }
+  50% {
+    transform: scale(1.05); /* Subtle scaling */
+    background-color: #ff1744; /* Intermediate shade */
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    background-color: #ff5252;
+    box-shadow: 0 0 10px rgba(255, 82, 82, 0.5);
+  }
+}

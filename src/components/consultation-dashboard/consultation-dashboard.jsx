@@ -221,7 +221,11 @@ const ConsultationDashboard = () => {
                 </Typography>
               </TableCell>
               <TableCell align="right">
-                <Button variant="outlined" onClick={toggleRecording}>
+                <Button
+                    variant="contained"
+                    onClick={toggleRecording}
+                    className={`recording-button ${recording ? "active" : ""}`}
+                >
                   {recording ? "Stop Recording" : "Start Recording"}
                 </Button>
               </TableCell>
