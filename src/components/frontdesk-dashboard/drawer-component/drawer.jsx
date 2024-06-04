@@ -52,11 +52,11 @@ export const DrawerComponent = () => {
       await fetch(`${API_URL}/api/queue/remove?clearAll=true`, {
         method: "DELETE",
       });
-      console.log("Queue cleared successfully");
+      // console.log("Queue cleared successfully");
       // Force a page reload to ensure the UI is in sync with the back end
       window.location.reload();
     } catch (error) {
-      console.error("Failed to clear the queue", error);
+      // console.error("Failed to clear the queue", error);
       // MVP: Error handling can be expanded in future iterations
     }
   };

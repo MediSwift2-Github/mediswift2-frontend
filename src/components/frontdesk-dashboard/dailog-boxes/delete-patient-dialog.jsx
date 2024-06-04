@@ -12,7 +12,7 @@ export const DeletePatientDialog = ({ isOpen, onClose }) => {
                 const data = await response.json();
                 setPatients(data); // Assuming the API returns an array of patient objects
             } catch (error) {
-                console.error("Error fetching patients:", error);
+                // console.error("Error fetching patients:", error);
                 setPatients([]);
             }
         };
@@ -25,10 +25,10 @@ export const DeletePatientDialog = ({ isOpen, onClose }) => {
     const handleDeletePatient = async (patientId) => {
         try {
             await fetch(`${API_URL}/api/queue/remove?patientId=${patientId}`, { method: 'DELETE' });
-            console.log('Patient deleted successfully');
+            // console.log('Patient deleted successfully');
             onClose(); // Close the dialog and rely on websocket for UI update
         } catch (error) {
-            console.error('Failed to delete patient', error);
+            // console.error('Failed to delete patient', error);
             // MVP: Detailed error handling can be added later
         }
     };

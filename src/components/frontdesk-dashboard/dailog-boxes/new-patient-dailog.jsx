@@ -32,7 +32,7 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
       }
       // If the mobile number does not match the above conditions, show an error
       else {
-        console.error("Invalid mobile number");
+        // console.error("Invalid mobile number");
         setContactError(true); // Add this line to display the error
 
         // You can display an error message to the user here
@@ -56,7 +56,7 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
 
       // Check if the request to add a new patient was successful
       if (response.ok) {
-        console.log("Patient added successfully");
+        // console.log("Patient added successfully");
 
         // Extract the newly added patient's data, including the _id
         const addedPatient = await response.json();
@@ -71,7 +71,7 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
         });
 
         if (queueResponse.ok) {
-          console.log("Patient added to the queue successfully");
+          // console.log("Patient added to the queue successfully");
           // Handle successful queue addition here (e.g., update UI)
         } else {
           // Handle failure to add patient to the queue
@@ -82,11 +82,11 @@ export const NewPatientDialog = ({ isOpen, onClose }) => {
         }
       } else {
         // If the server responded with an error when adding a new patient, handle it here
-        console.error("Failed to add patient", await response.text());
+        // console.error("Failed to add patient", await response.text());
       }
     } catch (error) {
       // Handle any errors that occurred during the fetch operations
-      console.error("Error during patient add or queue operation", error);
+      // console.error("Error during patient add or queue operation", error);
     } finally {
       setLoading(false); // Set loading to false when the request ends
     }

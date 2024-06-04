@@ -29,15 +29,15 @@ const LoginPage = () => {
           navigate("/frontdesk-dashboard");
         } else {
           // Handle other roles or default case
-          console.log(
-            "User role not recognized or user does not have permissions."
-          );
+          // console.log(
+          //   "User role not recognized or user does not have permissions."
+          // );
         }
       } else {
         alert("Authentication failed. Please try again.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      // console.error("Login error:", error);
       alert("An error occurred. Please try again later.");
     }
   };
@@ -48,7 +48,7 @@ const LoginPage = () => {
     event.preventDefault();
   };
 
-  console.log("username---->>", username);
+  // console.log("username---->>", username);
 
   return (
     <div className="login-container">

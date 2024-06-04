@@ -33,10 +33,10 @@ export const PatientTable = () => {
           mobileNumber: entry.patientMobileNumber, // Add this line
           status: entry.status, // Status is unchanged
         }));
-        console.log(queueData);
+        // console.log(queueData);
         setRows(queueData);
       } catch (error) {
-        console.error("Failed to fetch queue entries:", error);
+        // console.error("Failed to fetch queue entries:", error);
       }
     };
 
@@ -44,7 +44,7 @@ export const PatientTable = () => {
 
     // Setup WebSocket listener for queue updates
     socket.on("queueUpdate", (update) => {
-      console.log("Queue update received:", update);
+      // console.log("Queue update received:", update);
       // Optionally, fetch the updated data or adjust the state based on the update
       // For simplicity, we're just refetching the queue data here
       fetchData();

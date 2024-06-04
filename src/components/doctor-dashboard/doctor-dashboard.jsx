@@ -86,14 +86,14 @@ const DoctorDashboard = () => {
           }))
         );
       } catch (error) {
-        console.error("Failed to fetch queue:", error);
+        // console.error("Failed to fetch queue:", error);
       }
     };
 
     fetchQueue(); // Call the function when the component mounts
     // Setup WebSocket listener for queue updates
     socket.on("queueUpdate", () => {
-      console.log("Queue update received");
+      // console.log("Queue update received");
       fetchQueue(); // Refetch the queue data when an update is received
     });
 
@@ -105,7 +105,7 @@ const DoctorDashboard = () => {
   }, []); // Empty dependency array ensures this runs once on mount
 
   const handleStartConsultation = (patient) => {
-    console.log("Starting consultation for:", patient); // Log the patient details
+    // console.log("Starting consultation for:", patient); // Log the patient details
 
     // Dispatch the selectPatient action with the patient as payload
     dispatch(selectPatient(patient));

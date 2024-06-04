@@ -27,7 +27,7 @@ export const OldPatientDialog = ({ isOpen, onClose }) => {
           );
           setPatients(response.data); // Update state with fetched data
         } catch (error) {
-          console.error("Error fetching patients:", error);
+          // console.error("Error fetching patients:", error);
           setPatients([]); // Reset the patients on error
         }
       } else {
@@ -50,7 +50,7 @@ export const OldPatientDialog = ({ isOpen, onClose }) => {
         });
 
         if (response.status === 201) {
-          console.log("Patient added to the queue successfully");
+          // console.log("Patient added to the queue successfully");
           // Handle further UI updates or notifications here
         } else {
           console.error(
@@ -59,11 +59,11 @@ export const OldPatientDialog = ({ isOpen, onClose }) => {
           );
         }
       } catch (error) {
-        console.error("Error adding patient to queue:", error);
+        // console.error("Error adding patient to queue:", error);
         // Handle error (e.g., show a notification to the user)
       }
     } else {
-      console.error("No patient selected or patient ID is missing");
+      // console.error("No patient selected or patient ID is missing");
     }
     onClose(); // Close the dialog after attempting to add to queue
   };

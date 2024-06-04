@@ -38,7 +38,7 @@ const ConsultationDashboard = () => {
 
   // Function to start recording audio
   const startRecording = async () => {
-    console.log("Starting recording...");
+    // console.log("Starting recording...");
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -97,13 +97,13 @@ const ConsultationDashboard = () => {
                 return response.json();
               })
               .then((data) => {
-                console.log("Success:", data);
+                // console.log("Success:", data);
                 // Handle success, maybe set some state to show the upload was successful
                 setRecording(false); // Move this line here to ensure state is updated only after successful transcription
                 resolve(data); // Resolve the promise with the data from the server
               })
               .catch((error) => {
-                console.error("Error:", error);
+                // console.error("Error:", error);
                 // Handle error, maybe set some state to show the upload failed
                 setRecording(false); // Move this line here to ensure state is updated even if there is an error
                 reject(error); // Reject the promise with the error
@@ -137,7 +137,7 @@ const ConsultationDashboard = () => {
           }
         })
         .catch((error) => {
-          console.error("Error fetching session summary:", error);
+          // console.error("Error fetching session summary:", error);
         });
     }
   }, [patientId, summaryDate]);
@@ -302,12 +302,12 @@ const ConsultationDashboard = () => {
             if (recording) {
               try {
                 const data = await stopRecording(); // Ensure it waits for the transcription before navigating
-                console.log("Transcription data:", data); // You can log the data or handle it as needed
+                // console.log("Transcription data:", data); // You can log the data or handle it as needed
               } catch (error) {
-                console.error("Error during transcription:", error); // Handle any errors during the transcription process
+                // console.error("Error during transcription:", error); // Handle any errors during the transcription process
               }
             } else {
-              console.log("No recording was initiated.");
+              // console.log("No recording was initiated.");
             }
             setLoading(false); // Set loading to false when processing ends
             navigateToDocumentationPage(); // Navigate to the documentation page

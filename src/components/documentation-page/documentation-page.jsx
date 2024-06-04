@@ -85,10 +85,10 @@ const DocumentationPage = () => {
             setHealthRecordContent(formatToJsonDelta(data.ehrContent));
             setPatientHandoutContent(formatToJsonDelta(data.handoutContent));
           } else {
-            console.error("Failed to fetch summary:", response.statusText);
+            // console.error("Failed to fetch summary:", response.statusText);
           }
         } catch (error) {
-          console.error("Error fetching patient summary:", error);
+          // console.error("Error fetching patient summary:", error);
         } finally {
           setIsLoading(false); // End loading
         }
@@ -103,7 +103,7 @@ const DocumentationPage = () => {
   };
 
   const saveHealthRecord = async () => {
-    console.log("Saving Health Record:", healthRecordContent); // Log current state
+    // console.log("Saving Health Record:", healthRecordContent); // Log current state
 
     // Ensure there is a selected patient
     if (!selectedPatient) {
@@ -131,13 +131,13 @@ const DocumentationPage = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Health Record saved successfully:", result);
+        // console.log("Health Record saved successfully:", result);
       } else {
         // Handle non-2xx responses
-        console.error("Failed to save Health Record:", response.statusText);
+        // console.error("Failed to save Health Record:", response.statusText);
       }
     } catch (error) {
-      console.error("Error saving Health Record:", error);
+      // console.error("Error saving Health Record:", error);
     }
 
     // Optionally switch to the Patient Handout tab
@@ -169,15 +169,15 @@ const DocumentationPage = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Patient Handout sent successfully:", result);
+        // console.log("Patient Handout sent successfully:", result);
 
         // Navigate to Doctor Dashboard after successful update
         navigate("/doctor-dashboard");
       } else {
-        console.error("Failed to send Patient Handout:", response.statusText);
+        // console.error("Failed to send Patient Handout:", response.statusText);
       }
     } catch (error) {
-      console.error("Error sending Patient Handout:", error);
+      // console.error("Error sending Patient Handout:", error);
     }
   };
 
