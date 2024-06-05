@@ -26,17 +26,26 @@ export const PatientTable = () => {
     const fetchData = async () => {
       try {
         const response = await api.get("/api/queue");
-        // Mapping the data assuming 'patientId' is populated with the patient object and 'status' for patient status
         const queueData = response.data.map((entry) => ({
-          id: entry._id, // Use the queue entry's _id for key
-          name: entry.patientName, // Use the patientName from the queue entry
-          mobileNumber: entry.patientMobileNumber, // Add this line
-          status: entry.status, // Status is unchanged
+          id: entry._id,
+          name: entry.patientName,
+          mobileNumber: entry.patientMobileNumber,
+          status: entry.status,
+          queueEntryTime: new Date(entry.queueEntryTime)  // Ensure you have the entry time
         }));
-        // console.log(queueData);
+
+        // Sort data: 'Chatting' entries first, then by time, followed by 'Completed'
+        queueData.sort((a, b) => {
+          if (a.status === b.status) {
+            return a.queueEntryTime - b.queueEntryTime;  // Sort by time if the status is the same
+          }
+          return a.status === "Chatting" ? -1 : 1;  // Prioritize 'Chatting' over 'Completed'
+        });
+
+        console.log(queueData);
         setRows(queueData);
       } catch (error) {
-        // console.error("Failed to fetch queue entries:", error);
+        console.error("Failed to fetch queue entries:", error);
       }
     };
 

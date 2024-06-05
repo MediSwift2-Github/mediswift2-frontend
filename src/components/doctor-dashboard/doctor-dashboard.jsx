@@ -73,24 +73,28 @@ const DoctorDashboard = () => {
       socket.connect(); // Connect the socket
 
       // Function to fetch queue data
-    const fetchQueue = async () => {
-      try {
-        const response = await api.get("/api/queue");
-        setQueue(
-          response.data.map((patient) => ({
-            ...patient,
-            statusText:
-              patient.status === "Completed"
-                ? "Completed"
-                : "Start Consultation",
-          }))
-        );
-      } catch (error) {
-        // console.error("Failed to fetch queue:", error);
-      }
-    };
+      const fetchQueue = async () => {
+          try {
+              const response = await api.get("/api/queue");
+              const sortedQueue = response.data
+                  .map(patient => ({
+                      ...patient,
+                      statusText: patient.status === "Completed" ? "Completed" : "Start Consultation",
+                  }))
+                  .sort((a, b) => {
+                      if (a.status === b.status) {
+                          return new Date(a.queueEntryTime) - new Date(b.queueEntryTime);
+                      }
+                      return a.status === "Chatting" ? -1 : 1;
+                  });
 
-    fetchQueue(); // Call the function when the component mounts
+              setQueue(sortedQueue);
+          } catch (error) {
+              console.error("Failed to fetch queue:", error);
+          }
+      };
+
+      fetchQueue(); // Call the function when the component mounts
     // Setup WebSocket listener for queue updates
     socket.on("queueUpdate", () => {
       // console.log("Queue update received");
