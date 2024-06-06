@@ -35,6 +35,7 @@ const ConsultationDashboard = () => {
   // Generate the current date in YYYY-MM-DD format
   const currentDate = new Date();
   const summaryDate = currentDate.toISOString().split("T")[0];
+  const [statusMessage, setStatusMessage] = useState(""); // To handle status messages
 
   // Function to start recording audio
   const startRecording = async () => {
@@ -121,6 +122,20 @@ const ConsultationDashboard = () => {
       stopRecording();
     } else {
       startRecording();
+    }
+  };
+  const generateDocumentation = async () => {
+    if (!sessionSummary) { // Check if the sessionSummary is not yet set
+      setStatusMessage("Processing audio... Please wait."); // Set message to show processing status
+      const checkSummary = setInterval(() => {
+        if (sessionSummary) { // Check repeatedly at intervals if the summary is updated
+          clearInterval(checkSummary);
+          setStatusMessage(""); // Clear the message once processing is complete
+          navigateToDocumentationPage(); // Navigate to the documentation page
+        }
+      }, 1000); // Check every 1 second
+    } else {
+      navigateToDocumentationPage(); // Immediately navigate if summary is already available
     }
   };
 
@@ -286,7 +301,7 @@ const ConsultationDashboard = () => {
                     gutterBottom
                     style={{ color: "rgb(123, 128, 154)", textAlign: "center" }}
                   >
-                    Loading session summary...
+                    Patient Chat Unavailable. Click Start Recording.
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -294,6 +309,11 @@ const ConsultationDashboard = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {statusMessage && (
+          <div style={{ marginTop: 20, textAlign: 'center', fontSize: '1rem', color: 'red' }}>
+            {statusMessage}
+          </div>
+      )}
       <Button
           fullWidth
           variant="contained"
@@ -302,12 +322,13 @@ const ConsultationDashboard = () => {
             if (recording) {
               try {
                 const data = await stopRecording(); // Ensure it waits for the transcription before navigating
-                // console.log("Transcription data:", data); // You can log the data or handle it as needed
+                console.log("Transcription data:", data); // You can log the data or handle it as needed
+                await generateDocumentation(); // Function to handle documentation after recording
               } catch (error) {
-                // console.error("Error during transcription:", error); // Handle any errors during the transcription process
+                console.error("Error during transcription:", error); // Handle any errors during the transcription process
               }
             } else {
-              // console.log("No recording was initiated.");
+              await generateDocumentation(); // Function to handle documentation if no recording was initiated
             }
             setLoading(false); // Set loading to false when processing ends
             navigateToDocumentationPage(); // Navigate to the documentation page
